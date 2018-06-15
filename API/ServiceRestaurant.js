@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
-const bodyPars = bodyParser.json();
 
 
 const urlencodedParser = bodyParser.urlencoded({extended: false});
@@ -28,6 +27,7 @@ module.exports = function(app){
     })
     const apiRoutes = express.Router();
 
+    //Recupère les commandes à valider
     apiRoutes.get('/validCommands',function(req,res){
         var sql = "SELECT * FROM Commande WHERE etatCommande = 'Validée'"
         connection.query(sql,function(error,results,fields){
@@ -40,6 +40,7 @@ module.exports = function(app){
         })
     })
 
+    //Recupère les commandes à attribuer
     apiRoutes.get('/attrCommands',function(req,res){
         var sql = "SELECT * FROM Commande WHERE etatCommande = 'Attribuée'"
         connection.query(sql,function(error,results,fields){
@@ -52,6 +53,7 @@ module.exports = function(app){
         })
     })
 
+    //Permet de changer l'état d'une commande grâce a son ID
     apiRoutes.put('/majCommands',urlencodedParser,function(req,res){
         //var sql = "UPDATE Commande SET etatCommande = ? WHERE idCommande = ?";
         //var majParameters = [req.body.idCommande,req.body.etatCommande];
