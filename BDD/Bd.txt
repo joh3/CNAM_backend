@@ -1,0 +1,440 @@
+-- phpMyAdmin SQL Dump
+-- version 4.7.7
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : localhost
+-- Généré le :  sam. 16 juin 2018 à 14:52
+-- Version du serveur :  5.6.38
+-- Version de PHP :  7.2.1
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Base de données :  `Pizzatologue`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Adresse`
+--
+
+CREATE TABLE `Adresse` (
+  `idAdresse` int(11) NOT NULL,
+  `Adresse` text NOT NULL,
+  `codePostal` int(5) NOT NULL,
+  `ville` varchar(31) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `Adresse`
+--
+
+INSERT INTO `Adresse` (`idAdresse`, `Adresse`, `codePostal`, `ville`) VALUES
+(1, 'Adresse bidon', 31500, 'Toulouse'),
+(2, '664 route du turfu', 33000, 'Bordeaux'),
+(3, '664 route du turfuuuuu', 33000, 'Bordeaux'),
+(4, '664 route du dragon', 33000, 'Bordeaux'),
+(5, 'Adresse bidon', 38200, 'Toulouse'),
+(6, 'Rue Jesaispas', 44000, 'Paris'),
+(7, 'atestbidon', 45678, 'JESAISPAS'),
+(8, 'atestbidon', 45678, 'JESAISPAS'),
+(9, 'atestbidon', 45678, 'JESAISPAS'),
+(10, 'atestbidon', 45678, 'JESAISPAS'),
+(11, 'atestbidon', 45678, 'JESAISPAS'),
+(12, 'atestbidon', 45678, 'JESAISPAS');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Article`
+--
+
+CREATE TABLE `Article` (
+  `idArticle` int(11) NOT NULL,
+  `libelle` varchar(30) NOT NULL,
+  `description` text NOT NULL,
+  `prixHT` float NOT NULL,
+  `idCategorie` int(11) NOT NULL,
+  `idTVA` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `Article`
+--
+
+INSERT INTO `Article` (`idArticle`, `libelle`, `description`, `prixHT`, `idCategorie`, `idTVA`) VALUES
+(1, 'Margarita', 'Pizza margarita', 10, 1, 1),
+(2, 'Coca cola', 'Boisson 33 cl ', 2, 2, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Categorie`
+--
+
+CREATE TABLE `Categorie` (
+  `idCategorie` int(11) NOT NULL,
+  `nomCategorie` varchar(31) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `Categorie`
+--
+
+INSERT INTO `Categorie` (`idCategorie`, `nomCategorie`) VALUES
+(1, 'Plat'),
+(2, 'Boisson');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Client`
+--
+
+CREATE TABLE `Client` (
+  `idClient` int(11) NOT NULL,
+  `nom` varchar(32) NOT NULL,
+  `prenom` varchar(32) NOT NULL,
+  `email` varchar(32) NOT NULL,
+  `numTel` int(10) NOT NULL,
+  `idAdresse` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `Client`
+--
+
+INSERT INTO `Client` (`idClient`, `nom`, `prenom`, `email`, `numTel`, `idAdresse`) VALUES
+(1, 'targa', 'thomas', 'email@gmail.com', 123456789, 1),
+(2, 'david', 'lacondetoi', 'email@gmail.com', 987654321, 4),
+(3, 'test', 'testp', 'testemil', 5678754, 7),
+(4, 'test', 'testp', 'testemil', 5678754, 8),
+(5, 'test', 'testp', 'testemil', 5678754, 9),
+(6, 'test', 'testp', 'testemil', 5678754, 10),
+(7, 'test', 'testp', 'testemil', 5678754, 11),
+(8, 'test', 'testp', 'testemil', 5678754, 12);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Commande`
+--
+
+CREATE TABLE `Commande` (
+  `idCommande` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `ordre` int(5) DEFAULT NULL,
+  `prixTotalHT` float NOT NULL,
+  `prixTotalTTC` float NOT NULL,
+  `etatCommande` varchar(30) NOT NULL,
+  `idClient` int(11) NOT NULL,
+  `idAdresse` int(11) NOT NULL,
+  `idTournee` int(11) DEFAULT NULL,
+  `aLivrer` int(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `Commande`
+--
+
+INSERT INTO `Commande` (`idCommande`, `date`, `ordre`, `prixTotalHT`, `prixTotalTTC`, `etatCommande`, `idClient`, `idAdresse`, `idTournee`, `aLivrer`) VALUES
+(1, '2018-06-06 19:00:00', 1, 13, 15, 'En cours', 1, 1, 1, 0),
+(2, '2018-06-06 19:00:00', 1, 10, 15, 'validation', 1, 1, 1, 0),
+(3, '2018-05-09 18:33:07', 0, 10, 15, 'validation', 1, 5, 1, 0),
+(4, '2018-05-09 18:37:57', 0, 10, 15, 'Attribuée', 1, 5, 1, 0),
+(5, '2018-05-09 18:38:09', 0, 10, 15, 'lacondetoimino', 1, 5, 1, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `LigneCommande`
+--
+
+CREATE TABLE `LigneCommande` (
+  `idCommande` int(11) NOT NULL,
+  `idArticle` int(11) NOT NULL,
+  `quantite` int(3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `LigneCommande`
+--
+
+INSERT INTO `LigneCommande` (`idCommande`, `idArticle`, `quantite`) VALUES
+(1, 1, 1),
+(1, 2, 1),
+(5, 1, 2),
+(5, 2, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Livreur`
+--
+
+CREATE TABLE `Livreur` (
+  `idLivreur` int(11) NOT NULL,
+  `nom` varchar(31) NOT NULL,
+  `prenom` varchar(31) NOT NULL,
+  `email` varchar(31) NOT NULL,
+  `motDePasse` varchar(31) NOT NULL,
+  `statut` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `Livreur`
+--
+
+INSERT INTO `Livreur` (`idLivreur`, `nom`, `prenom`, `email`, `motDePasse`, `statut`) VALUES
+(1, 'kasher', 'abdel', 'email@gmail.com', 'motdepasselol', 'disponible');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Role`
+--
+
+CREATE TABLE `Role` (
+  `idRole` int(11) NOT NULL,
+  `nomRole` varchar(30) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Tournee`
+--
+
+CREATE TABLE `Tournee` (
+  `idTournee` int(11) NOT NULL,
+  `dateDebut` datetime NOT NULL,
+  `dateFin` datetime NOT NULL,
+  `idLivreur` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `Tournee`
+--
+
+INSERT INTO `Tournee` (`idTournee`, `dateDebut`, `dateFin`, `idLivreur`) VALUES
+(1, '2018-06-06 20:00:00', '2018-06-06 22:00:00', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `TVA`
+--
+
+CREATE TABLE `TVA` (
+  `idTVA` int(11) NOT NULL,
+  `taux` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `TVA`
+--
+
+INSERT INTO `TVA` (`idTVA`, `taux`) VALUES
+(1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Utilisateur`
+--
+
+CREATE TABLE `Utilisateur` (
+  `idUtilisateur` int(11) NOT NULL,
+  `login` varchar(20) NOT NULL,
+  `password` varchar(30) NOT NULL,
+  `idRole` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `Adresse`
+--
+ALTER TABLE `Adresse`
+  ADD PRIMARY KEY (`idAdresse`);
+
+--
+-- Index pour la table `Article`
+--
+ALTER TABLE `Article`
+  ADD PRIMARY KEY (`idArticle`),
+  ADD KEY `fk_categorie` (`idCategorie`),
+  ADD KEY `fk_idTVA` (`idTVA`);
+
+--
+-- Index pour la table `Categorie`
+--
+ALTER TABLE `Categorie`
+  ADD PRIMARY KEY (`idCategorie`);
+
+--
+-- Index pour la table `Client`
+--
+ALTER TABLE `Client`
+  ADD PRIMARY KEY (`idClient`),
+  ADD KEY `fk_idAdresse` (`idAdresse`);
+
+--
+-- Index pour la table `Commande`
+--
+ALTER TABLE `Commande`
+  ADD PRIMARY KEY (`idCommande`),
+  ADD KEY `fk_idClient` (`idClient`),
+  ADD KEY `fk_adresse` (`idAdresse`),
+  ADD KEY `fk_tournee` (`idTournee`);
+
+--
+-- Index pour la table `LigneCommande`
+--
+ALTER TABLE `LigneCommande`
+  ADD PRIMARY KEY (`idCommande`,`idArticle`),
+  ADD KEY `idArticle` (`idArticle`);
+
+--
+-- Index pour la table `Livreur`
+--
+ALTER TABLE `Livreur`
+  ADD PRIMARY KEY (`idLivreur`);
+
+--
+-- Index pour la table `Role`
+--
+ALTER TABLE `Role`
+  ADD PRIMARY KEY (`idRole`);
+
+--
+-- Index pour la table `Tournee`
+--
+ALTER TABLE `Tournee`
+  ADD PRIMARY KEY (`idTournee`),
+  ADD KEY `fk_livreur` (`idLivreur`);
+
+--
+-- Index pour la table `TVA`
+--
+ALTER TABLE `TVA`
+  ADD PRIMARY KEY (`idTVA`);
+
+--
+-- Index pour la table `Utilisateur`
+--
+ALTER TABLE `Utilisateur`
+  ADD PRIMARY KEY (`idUtilisateur`),
+  ADD KEY `fk_idRole` (`idRole`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `Adresse`
+--
+ALTER TABLE `Adresse`
+  MODIFY `idAdresse` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- AUTO_INCREMENT pour la table `Article`
+--
+ALTER TABLE `Article`
+  MODIFY `idArticle` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT pour la table `Categorie`
+--
+ALTER TABLE `Categorie`
+  MODIFY `idCategorie` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT pour la table `Client`
+--
+ALTER TABLE `Client`
+  MODIFY `idClient` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT pour la table `Commande`
+--
+ALTER TABLE `Commande`
+  MODIFY `idCommande` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT pour la table `Livreur`
+--
+ALTER TABLE `Livreur`
+  MODIFY `idLivreur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT pour la table `Role`
+--
+ALTER TABLE `Role`
+  MODIFY `idRole` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `Tournee`
+--
+ALTER TABLE `Tournee`
+  MODIFY `idTournee` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT pour la table `TVA`
+--
+ALTER TABLE `TVA`
+  MODIFY `idTVA` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT pour la table `Utilisateur`
+--
+ALTER TABLE `Utilisateur`
+  MODIFY `idUtilisateur` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `Article`
+--
+ALTER TABLE `Article`
+  ADD CONSTRAINT `fk_categorie` FOREIGN KEY (`idCategorie`) REFERENCES `Categorie` (`idCategorie`),
+  ADD CONSTRAINT `fk_idTVA` FOREIGN KEY (`idTVA`) REFERENCES `TVA` (`idTVA`);
+
+--
+-- Contraintes pour la table `Client`
+--
+ALTER TABLE `Client`
+  ADD CONSTRAINT `fk_idAdresse` FOREIGN KEY (`idAdresse`) REFERENCES `Adresse` (`idAdresse`);
+
+--
+-- Contraintes pour la table `Commande`
+--
+ALTER TABLE `Commande`
+  ADD CONSTRAINT `fk_adresse` FOREIGN KEY (`idAdresse`) REFERENCES `Adresse` (`idAdresse`),
+  ADD CONSTRAINT `fk_idClient` FOREIGN KEY (`idClient`) REFERENCES `Client` (`idClient`),
+  ADD CONSTRAINT `fk_tournee` FOREIGN KEY (`idTournee`) REFERENCES `Tournee` (`idTournee`);
+
+--
+-- Contraintes pour la table `LigneCommande`
+--
+ALTER TABLE `LigneCommande`
+  ADD CONSTRAINT `lignecommande_ibfk_1` FOREIGN KEY (`idCommande`) REFERENCES `Commande` (`idCommande`),
+  ADD CONSTRAINT `lignecommande_ibfk_2` FOREIGN KEY (`idArticle`) REFERENCES `Article` (`idArticle`);
+
+--
+-- Contraintes pour la table `Tournee`
+--
+ALTER TABLE `Tournee`
+  ADD CONSTRAINT `fk_livreur` FOREIGN KEY (`idLivreur`) REFERENCES `Livreur` (`idLivreur`);
+
+--
+-- Contraintes pour la table `Utilisateur`
+--
+ALTER TABLE `Utilisateur`
+  ADD CONSTRAINT `fk_idRole` FOREIGN KEY (`idRole`) REFERENCES `Role` (`idRole`);
