@@ -29,7 +29,7 @@ module.exports = function(app){
 
     //Recupère les commandes à valider
     apiRoutes.get('/validCommands',function(req,res){
-        var sql = "SELECT * FROM Commande WHERE etatCommande = 'Validée'"
+        var sql = "SELECT cm.date,cm.ordre,cm.prixTotalHT,cm.prixTotalTTC,cm.etatCommande,cm.idClient,cm.idAdresse,cm.idTournee,cm.aLivrer,c.nom,c.prenom FROM Commande cm,client c where cm.idClient = c.idClient and etatCommande = 'Validée'"
         connection.query(sql,function(error,results,fields){
             if (error) {
                 throw error;
@@ -53,6 +53,7 @@ module.exports = function(app){
         })
     })
 
+
     //Permet de changer l'état d'une commande grâce a son ID
     apiRoutes.put('/majCommands',urlencodedParser,function(req,res){
         //var sql = "UPDATE Commande SET etatCommande = ? WHERE idCommande = ?";
@@ -62,6 +63,17 @@ module.exports = function(app){
                 throw error;
             } else {
                 return res.status(200).json(results);
+            }
+        })
+    })
+
+    //Permet de supprimer une commande grâce à son ID
+    apiRoutes.delete('/deleteCommand',urlencodedParser,function(req,res){
+        connection.query('DELETE FROM `Commande` WHERE idCommande = ? ',[req.body.idCommande],function(error,results,fields){
+            if (error){
+                throw error;
+            } else {
+                return res.status(200).json({success:true,message:'Commande supprimée'})
             }
         })
     })
