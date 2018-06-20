@@ -68,17 +68,6 @@ module.exports = function(app){
         }); 
     });
 
-    //Requete generale pour filtrer sur l'etatCommande que l'on veut
-    apiRoutes.get('/filterCommands',urlencodedParser,function(req,res){
-        connection.query('SELECT * FROM Commande WHERE etatCommande = ?',[req.body.etatCommande],function(error,results,fields){
-            if (error){
-                throw error;
-            } else {
-                return res.status(200).json(results);
-            }
-        })
-    })
-
 app.use(apiRoutes);
 
 }
