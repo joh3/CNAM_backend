@@ -68,6 +68,19 @@ module.exports = function(app){
         }); 
     });
 
+    //renvoi les infos d'un livreur donné en paramètre
+    apiRoutes.get('/livreur/:livreurid',function(req,res){
+        if(!req.params.livreurid){
+            return res.status(400).json({success:false,message:'Livreur id necessaire'});
+        }
+        connection.query('select l.idLivreur, l.nom, l.prenom,l.email from livreur l where l.idLivreur = ?',[req.params.livreurid], function (error, results, fields) {
+            if (error) {
+                throw error;
+            }
+            return res.json(results);
+        }); 
+    });
+
 app.use(apiRoutes);
 
 }
