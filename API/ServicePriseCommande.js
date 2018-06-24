@@ -189,6 +189,19 @@ module.exports = function(app){
                 }
             })
         })
+
+        //Renvoi le contenu d'une commande en fonction du numéro de commande
+    apiRoutes.get('/article/commande/:idCommande',function(req,res){
+        if(!req.params.idCommande){
+            return res.status(400).json({success:false,message:'Client id necessaire'});
+        }
+        connection.query('select a.prixHT, a.libelle, lc.quantite from LigneCommande lc join article a on a.idArticle = lc.idArticle where lc.idCommande = ?',[req.params.idCommande], function (error, results, fields) {
+            if (error) {
+                throw error;
+            }
+            return res.json(results);
+        }); 
+    });
         
     
 app.use(apiRoutes);
