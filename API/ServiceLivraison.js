@@ -60,7 +60,7 @@ module.exports = function(app){
         if(!req.params.idCommande){
             return res.status(400).json({success:false,message:'Client id necessaire'});
         }
-        connection.query('select a.prixHT, a.libelle, c.quantite from contenir c join article a on a.idArticle = c.idArticle where c.idCommande = ?',[req.params.idCommande], function (error, results, fields) {
+        connection.query('select a.prixHT, a.libelle, lc.quantite from LigneCommande lc join article a on a.idArticle = lc.idArticle where lc.idCommande = ?',[req.params.idCommande], function (error, results, fields) {
             if (error) {
                 throw error;
             }

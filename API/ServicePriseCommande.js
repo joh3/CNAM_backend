@@ -175,6 +175,20 @@ module.exports = function(app){
 
 				});
         });
+
+        //Liste des commandes faites par un client donné
+        apiRoutes.get('/commande/client/:idClient',urlencodedParser,function(req,res){
+            if(!req.params.idClient){
+                return res.status(400).json({success:false,message:'Client id necessaire'});
+            }
+            connection.query('select c.idCommande, c.date, c.prixTotalHT, c.prixTotalTTC, c.etatCommande, a.adresse, a.codePostal, a.ville from Commande c, Adresse a where c.idAdresse = a.idAdresse and idClient = ?',[req.params.idClient],function(error,results,fields){
+                if (error) {
+                    throw error;
+                } else {
+                    return res.status(200).json(results);
+                }
+            })
+        })
         
     
 app.use(apiRoutes);
