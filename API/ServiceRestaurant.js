@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
+const bodyPars = bodyParser.json();
 
 
 const urlencodedParser = bodyParser.urlencoded({extended: false});
@@ -55,7 +56,7 @@ module.exports = function(app){
 
 
     //Permet de changer l'état d'une commande grâce a son ID
-    apiRoutes.put('/majCommands',urlencodedParser,function(req,res){
+    apiRoutes.put('/majCommands',bodyPars,function(req,res){
         //var sql = "UPDATE Commande SET etatCommande = ? WHERE idCommande = ?";
         //var majParameters = [req.body.idCommande,req.body.etatCommande];
         connection.query('UPDATE Commande SET etatCommande = ? WHERE idCommande = ?',[req.body.etatCommande,req.body.idCommande],function(error,results,fields){
@@ -67,9 +68,15 @@ module.exports = function(app){
         })
     })
 
-    //Permet de supprimer une commande grâce à son ID
-    apiRoutes.delete('/deleteCommand',urlencodedParser,function(req,res){
-        connection.query('DELETE FROM `Commande` WHERE idCommande = ? ',[req.body.idCommande],function(error,results,fields){
+    apiRoutes.post('/deleteCommand',bodyPars,function(req,res){
+		console.log(req.body);
+		connection.query('DELETE FROM LigneCommande WHERE idCommande = ? ',[req.body.idCommande],function(error,results,fields){
+            if (error){
+                throw error;
+            } 
+        })
+		
+        connection.query('DELETE FROM Commande WHERE idCommande = ? ',[req.body.idCommande],function(error,results,fields){
             if (error){
                 throw error;
             } else {
@@ -78,6 +85,18 @@ module.exports = function(app){
         })
     })
 
+    //Renvoi les infos d'un client en fonction du numéro de commande
+    apiRoutes.get('/client/AttrCommande/:idCommande',function(req,res){
+        if(!req.params.idCommande){
+            return res.status(400).json({success:false,message:'Client id necessaire'});
+        }
+        connection.query('select cli.nom, cli.prenom, a.adresse, a.codePostal, a.ville, cli.numTel from client cli, Adresse a, commande c where c.idClient = cli.idClient and cli.idAdresse = a.idAdresse AND c.idCommande = ?',[req.params.idCommande], function (error, results, fields) {
+            if (error) {
+                throw error;
+            }
+            return res.json(results);
+        }); 
+    });
 app.use(apiRoutes);
 
 }
