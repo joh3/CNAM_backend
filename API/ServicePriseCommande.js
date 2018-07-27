@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const bodyPars = bodyParser.json();
+const bcrypt = require('bcrypt');
 
 
 const urlencodedParser = bodyParser.urlencoded({extended: false});
@@ -83,7 +84,7 @@ module.exports = function(app){
                 throw error;
             } 
         //ajout des informations client avec cle etrangere
-        connection.query('INSERT INTO Client VALUES (NULL,?,?,?,?,(SELECT MAX(idAdresse) FROM adresse))',[req.body.nom,req.body.prenom,req.body.email,req.body.numTel,req.body.motDePasse],function(error,results,fields){
+        connection.query('INSERT INTO Client VALUES (NULL,?,?,?,?,(SELECT MAX(idAdresse) FROM adresse))',[req.body.nom,req.body.prenom,req.body.email,req.body.numTel],function(error,results,fields){
             if (error){
                 throw error;
             } else {
@@ -141,7 +142,7 @@ module.exports = function(app){
                     
                     var insertCommande = "INSERT INTO commande (date,ordre,prixTotalHT,prixTotalTTC,etatCommande,idClient,idAdresse,idTournee,aLivrer) VALUES ?";
                     var parametersCommande = [
-                        [formatedDate,0,req.body.prixTotalHT,req.body.prixTotalTTC,'validation',req.body.idClient,id,1,0]
+                        [formatedDate,0,req.body.prixTotalHT,req.body.prixTotalTTC,'validation',req.body.idClient,id,NULL,0]
                     ];
 
                     connection.query(insertCommande,[parametersCommande],function(error,resultsCommande,fields){

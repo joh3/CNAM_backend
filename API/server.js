@@ -8,6 +8,7 @@ app = express();
 require('./ServicePriseCommande')(app);
 require('./ServiceLivraison')(app);
 require('./ServiceRestaurant')(app);
+require('./auth')(app)
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
