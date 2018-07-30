@@ -112,7 +112,7 @@ module.exports = function(app){
 
     //creation de la tournee
     apiRoutes.post('/newTournee',urlencodedParser,function(req,res){
-        var sqlTournee = "INSERT INTO Tournee VALUES (NULL,NOW(),'',?)";
+        var sqlTournee = "INSERT INTO Tournee VALUES (NULL,'','',?)";
         var idtournee;
         connection.query(sqlTournee,[req.body.idLivreur],function(error,results,fields){
             if(!req.body.idLivreur){
