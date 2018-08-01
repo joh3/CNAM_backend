@@ -6,6 +6,8 @@ const bodyPars = bodyParser.json();
 
 const urlencodedParser = bodyParser.urlencoded({extended: false});
 
+
+
 module.exports = function(app){
         var connection = mysql.createConnection({
         connectionLimit: 50,
@@ -43,7 +45,7 @@ module.exports = function(app){
 
     //Recupère les commandes à attribuer
     apiRoutes.get('/attrCommands',function(req,res){
-        var sql = "SELECT * FROM Commande WHERE etatCommande = 'Attribuée' AND aLivrer = 1"
+        var sql = "SELECT * FROM Commande, Adresse WHERE Commande.idAdresse = Adresse.idAdresse AND etatCommande = 'Attribuée' AND aLivrer = 1"
         connection.query(sql,function(error,results,fields){
             if (error) {
                 throw error;
@@ -111,29 +113,39 @@ module.exports = function(app){
     })    
 
     //creation de la tournee
-    apiRoutes.post('/newTournee',urlencodedParser,function(req,res){
+    apiRoutes.post('/newTournee',bodyPars,function(req,res){
         var sqlTournee = "INSERT INTO Tournee VALUES (NULL,'','',?)";
         var idtournee;
         connection.query(sqlTournee,[req.body.idLivreur],function(error,results,fields){
             if(!req.body.idLivreur){
+                console.log(req.body)
                 console.log('idLivreur missing');
             } else {
                 //res.status(200).json({message:'Tournee créee, livreur affecté'});
                 console.log('Tournee créee, livreur affecté');
                 idtournee = results.insertId;
-                var sqlCommande = "UPDATE Commande SET etatCommande = 'En cours de livraison', idTournee = " + idtournee + " WHERE idCommande = ?";
-                console.log(sqlCommande);
-                connection.query(sqlCommande,[req.body.idCommande],function(error,results,fields){
-                    if(!req.body.idCommande){
-                        return res.status(400).json({message:'idCommande manquant'})
+                
+                //boucle sur les commandes
+                var nbCommands = Object.keys(req.body.commands).length;
+                for(var i=0;i<nbCommands;i++){
+                    var sqlCommande = "UPDATE Commande SET etatCommande = 'En cours de livraison', idTournee = " + idtournee + ", ordre = " + i + " WHERE idCommande = ?";
+                    console.log(sqlCommande);
+                        connection.query(sqlCommande,[req.body.commands[i]],function(error,results,fields){
+                    })
+                }
+                
+                //update table livreur
+                var sqlLivreur = "UPDATE Livreur SET statut = 'En tournée' WHERE idLivreur = ? ";
+                connection.query(sqlLivreur,[req.body.idLivreur],function(error,results,fields){
+                    if (error) {
+                        throw error;
                     } else {
-                        return res.status(200).json({message:'Commande modifiée, livreur attribué',success:true})
+                        return res.status(200).json({message:'Attribution OK',success:true})
                     }
                 })
             }
         })
     })
-    
 
 app.use(apiRoutes);
 
