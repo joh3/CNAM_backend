@@ -1,4 +1,4 @@
--- phpMyAdmin SQL Dump
+﻿-- phpMyAdmin SQL Dump
 -- version 4.7.7
 -- https://www.phpmyadmin.net/
 --
@@ -25,7 +25,7 @@ CREATE TABLE `Adresse` (
   `Adresse` text NOT NULL,
   `codePostal` int(5) NOT NULL,
   `ville` varchar(31) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 --
 -- Déchargement des données de la table `Adresse`
@@ -63,7 +63,7 @@ CREATE TABLE `Article` (
   `prixHT` float NOT NULL,
   `idCategorie` int(11) NOT NULL,
   `idTVA` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)
 
 --
 -- Déchargement des données de la table `Article`
@@ -84,7 +84,7 @@ INSERT INTO `Article` (`idArticle`, `libelle`, `description`, `prixHT`, `idCateg
 CREATE TABLE `Categorie` (
   `idCategorie` int(11) NOT NULL,
   `nomCategorie` varchar(31) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 --
 -- Déchargement des données de la table `Categorie`
@@ -108,7 +108,7 @@ CREATE TABLE `Client` (
   `numTel` int(10) NOT NULL,
   `idAdresse` int(11) NOT NULL,
   `idUtilisateur` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 --
 -- Déchargement des données de la table `Client`
@@ -144,7 +144,7 @@ CREATE TABLE `Commande` (
   `idAdresse` int(11) NOT NULL,
   `idTournee` int(11) DEFAULT NULL,
   `aLivrer` int(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 --
 -- Déchargement des données de la table `Commande`
@@ -182,7 +182,7 @@ CREATE TABLE `LigneCommande` (
   `idCommande` int(11) NOT NULL,
   `idArticle` int(11) NOT NULL,
   `quantite` int(3) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 --
 -- Déchargement des données de la table `LigneCommande`
@@ -205,7 +205,7 @@ CREATE TABLE `Livreur` (
   `email` varchar(31) NOT NULL,
   `motDePasse` varchar(31) NOT NULL,
   `statut` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 --
 -- Déchargement des données de la table `Livreur`
@@ -226,7 +226,7 @@ INSERT INTO `Livreur` (`idLivreur`, `nom`, `prenom`, `email`, `motDePasse`, `sta
 CREATE TABLE `Role` (
   `idRole` int(11) NOT NULL,
   `nomRole` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 --
 -- Déchargement des données de la table `Role`
@@ -244,10 +244,10 @@ INSERT INTO `Role` (`idRole`, `nomRole`) VALUES
 
 CREATE TABLE `Tournee` (
   `idTournee` int(11) NOT NULL,
-  `dateDebut` datetime NOT NULL,
-  `dateFin` datetime NOT NULL,
+  `dateDebut` datetime NULL,
+  `dateFin` datetime NULL,
   `idLivreur` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 --
 -- Déchargement des données de la table `Tournee`
@@ -287,7 +287,7 @@ INSERT INTO `Tournee` (`idTournee`, `dateDebut`, `dateFin`, `idLivreur`) VALUES
 CREATE TABLE `TVA` (
   `idTVA` int(11) NOT NULL,
   `taux` float DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 --
 -- Déchargement des données de la table `TVA`
@@ -308,7 +308,7 @@ CREATE TABLE `Utilisateur` (
   `login` varchar(20) NOT NULL,
   `password` varchar(30) NOT NULL,
   `idRole` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ;
 
 --
 -- Déchargement des données de la table `Utilisateur`

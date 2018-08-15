@@ -9,14 +9,13 @@ const urlencodedParser = bodyParser.urlencoded({extended: false});
 
 
 module.exports = function(app){
-        var connection = mysql.createConnection({
+    var connection = mysql.createConnection({
         connectionLimit: 50,
         host: 'localhost',
-        port: '8889',
         user: 'root',
-        password: 'root',
+        password: '',
         multipleStatements: true,
-        database: 'Pizzatologue'
+        database: 'pizzatologue_new'
     });
 
     //connect to mysql
@@ -114,7 +113,7 @@ module.exports = function(app){
 
     //creation de la tournee
     apiRoutes.post('/newTournee',bodyPars,function(req,res){
-        var sqlTournee = "INSERT INTO Tournee VALUES (NULL,'','',?)";
+        var sqlTournee = "INSERT INTO Tournee VALUES (NULL,NULL,NULL,?)";
         var idtournee;
         connection.query(sqlTournee,[req.body.idLivreur],function(error,results,fields){
             if(!req.body.idLivreur){

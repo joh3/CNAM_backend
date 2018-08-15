@@ -7,14 +7,13 @@ const bodyPars = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({extended: false});
 
 module.exports = function(app){
-        var connection = mysql.createConnection({
+	var connection = mysql.createConnection({
         connectionLimit: 50,
         host: 'localhost',
-        port: '8889',
         user: 'root',
-        password: 'root',
+        password: '',
         multipleStatements: true,
-        database: 'Pizzatologue'
+        database: 'pizzatologue_new'
     });
 
     //connect to mysql
