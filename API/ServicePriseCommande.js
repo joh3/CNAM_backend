@@ -93,6 +93,18 @@ module.exports = function(app){
         })
     });
 
+    apiRoutes.get('/commande/:idCommande', function (req, res) {
+		if(!req.params.idCommande){
+            return res.status(400).json({success:false,message:'Commande id necessaire'});
+        }
+        connection.query('SELECT c.*, a.* FROM commande c, adresse a, client cl WHERE a.idAdresse = cl.idAdresse AND c.idClient = cl.idClient AND c.idCommande = ?',[req.params.idCommande], function(error, results, fileds) {
+        	if(error){
+                throw error;
+            }
+            return res.json(results);
+        })
+     });
+
     //recup des infos pour un client donné en paramètre
     apiRoutes.get('/client/:clientid',function(req,res){
         if(!req.params.clientid){
@@ -119,7 +131,7 @@ module.exports = function(app){
                         console.log('Adresse deja existanta id: '+ id)
                     } else {
                         console.log('Nouvelle adresse');
-                        var insertAdresse="INSERT INTO adresse (adresse,codePostal,ville) VALUES ?";
+                        var insertAdresse="INSERT INTO adresse (Adresse,codePostal,ville) VALUES ?";
                         var parametersAdresse=[
                             [req.body.adresse,req.body.codePostal,req.body.ville]
                         ];
@@ -129,6 +141,7 @@ module.exports = function(app){
                                 console.log('Erreur lors de l insertion de l adresse');
                             } else {
                                 console.log('Nouvelle adresse inseree');
+                                console.log(resultsAdresse);
                                 id=resultsAdresse.insertId;
                             }
                             
@@ -141,7 +154,7 @@ module.exports = function(app){
                     
                     var insertCommande = "INSERT INTO commande (date,ordre,prixTotalHT,prixTotalTTC,etatCommande,idClient,idAdresse,idTournee,aLivrer) VALUES ?";
                     var parametersCommande = [
-                        [formatedDate,0,req.body.prixTotalHT,req.body.prixTotalTTC,'validation',req.body.idClient,id,NULL,0]
+                        [formatedDate,0,req.body.prixTotalHT,req.body.prixTotalTTC,'Validée',req.body.idClient,id,null,0]
                     ];
 
                     connection.query(insertCommande,[parametersCommande],function(error,resultsCommande,fields){
@@ -161,18 +174,18 @@ module.exports = function(app){
                                 [idCom,req.body.article[i].idArticle,req.body.article[i].qte]
                             ];
                         
-                        connection.query(insertLigneCommande,[parametersLigneCommande],function(error,resultsLigneCommande,fields){
-                            if (error) {
-                                throw error;
-                                console.log('Erreur lors de l insertion de la ligne de commande');
-                            } else {
-                                console.log('Linge de commande inseree');
-                            }
-                        })
+	                        connection.query(insertLigneCommande,[parametersLigneCommande],function(error,resultsLigneCommande,fields){
+	                            if (error) {
+	                                throw error;
+	                                console.log('Erreur lors de l insertion de la ligne de commande');
+	                            } else {
+	                                console.log('Ligne de commande inseree');
+	                            }
+	                        })
                         }
                     })
 
-
+                    return res.status(200).json({status: 200, message: "Commande ajoutée"});
 				});
         });
 
@@ -202,6 +215,25 @@ module.exports = function(app){
             return res.json(results);
         }); 
     });
+
+    apiRoutes.get('/tournee/:idCient/:idCommande',function(req,res) {
+    	if(!req.params.idCient){
+            return res.status(400).json({success:false,message:'Client id necessaire'});
+        }
+    	if(!req.params.idCommande){
+            return res.status(400).json({success:false,message:'Commande id necessaire'});
+        }
+        connection.query('select idTournee from commande where idClient = ? and idCommande = ?', [req.params.idCient, req.params.idCommande], function (error, results, fields) {
+        	if (error) {
+                throw error;
+            }
+            return res.json(results);
+        });
+    });
+
+
+
+
         
     app.use(function(req, res, next) {
         res.header("Access-Control-Allow-Origin", "*");
