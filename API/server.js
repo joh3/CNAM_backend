@@ -43,7 +43,7 @@ server.listen(port,function(){
 io.on('connection', function (socket) {
 	console.log("Une nouvelle connexion est active");
 	socket.on('newGeoMobile', function (data) {
-		socket.emit('newGeoServeur', data);
+		socket.broadcast.emit('newGeoServeur', data);
 		console.log(data);
 	});
 });
